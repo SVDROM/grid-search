@@ -1,0 +1,6 @@
+outs:
+- md5: fbf7e2c4b36517da035e705154816696.dir
+  size: 1116307641
+  nfiles: 501
+  hash: md5
+  path: era5_slice.zarr

@@ -1,3 +1,4 @@
 /scaler.pkl
 /svd.pkl
 /svd_hankel.pkl
+/era5_slice.zarr
