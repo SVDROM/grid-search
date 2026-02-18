@@ -107,3 +107,7 @@ def main() -> None:
 
         # log the mean RMSE as a metric
         live.log_metric("rmse", rmse_mean)
+
+
+if __name__ == "__main__":
+    main()
