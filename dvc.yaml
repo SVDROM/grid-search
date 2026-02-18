@@ -1,0 +1,13 @@
+stages:
+  train:
+    matrix:
+      n_modes: [10, 12, 14, 16, 18, 20, 22, 24, 26, 28, 30, 32, 34, 36, 38, 40]
+      hankel: [False, True]
+    cmd: python train.py
+    deps:
+      - train.py
+      - input_data/svd.pkl
+      - input_data/svd_hankel.pkl
+    params:
+      - model
+
