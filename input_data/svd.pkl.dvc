@@ -4,3 +4,9 @@ outs:
   isexec: true
   hash: md5
   path: svd.pkl
+  meta:
+    variables: ["temperature"]
+    time_start: "2010-01-01T00"
+    time_end: "2019-12-31T18"
+    time_delta: "6h"
+    pressure_level: 850
