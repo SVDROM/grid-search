@@ -20,10 +20,10 @@ dask.config.set(scheduler="threads", num_workers=2)
 
 def evaluate(
     dmd: OptDMD,
+    reconstruct_start: str,
+    reconstruct_end: str,
     groundtruth_path: Path = Path("input_data/era5_slice.zarr"),
     scaler_path: Path = Path("input_data/scaler.pkl"),
-    reconstruct_start: str = "2019-11-01T00",
-    reconstruct_end: str = "2019-12-31T18",
 ) -> xr.DataArray:
 
     groundtruth = xr.open_dataarray(str(groundtruth_path), chunks="auto")
@@ -79,8 +79,8 @@ def main() -> None:
         # evaluate the fitted DMD model
         rmse = evaluate(
             dmd,
-            reconstruct_start="2019-11-01T00",
-            reconstruct_end="2019-12-31T20",
+            reconstruct_start=params.model.reconstruct_start,
+            reconstruct_end=params.model.reconstruct_end,
         )
         rmse_mean = rmse.mean().values
 
@@ -90,10 +90,14 @@ def main() -> None:
             if params.model.hankel
             else f"dmd_{params.model.n_modes}.pkl"
         )
+        desc = (
+            "A DMD model fitted to atmospheric temperature at "
+            f"{params.model.pressure_level} hPa."
+        )
         live.log_artifact(
             str(models_dir / model_name),
             type="model",
-            desc="A DMD model fitted to 10 years of atmospheric temperature at 850 hPa.",
+            desc=desc,
             meta={
                 "n_modes": params.model.n_modes,
                 "hankel": params.model.hankel,
@@ -104,7 +108,7 @@ def main() -> None:
         # log a plot of RMSE vs time
         fig, ax = plt.subplots()
         rmse.plot(ax=ax)
-        ax.set_title("level = 850 hPa")
+        ax.set_title(f"level = {params.model.pressure_level} hPa")
         ax.set_ylabel("Temperature RMSE [K]")
         ax.set_xlabel("Time")
         fig_name = (
