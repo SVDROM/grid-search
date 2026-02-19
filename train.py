@@ -77,7 +77,11 @@ def main() -> None:
         dmd.fit(svd.u, svd.s, svd.v)
 
         # evaluate the fitted DMD model
-        rmse = evaluate(dmd)
+        rmse = evaluate(
+            dmd,
+            reconstruct_start="2019-11-01T00",
+            reconstruct_end="2019-12-31T20",
+        )
         rmse_mean = rmse.mean().values
 
         # log the model
