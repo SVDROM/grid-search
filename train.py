@@ -7,7 +7,7 @@ from pathlib import Path
 from box import ConfigBox
 from ruamel.yaml import YAML
 from svdrom.dmd import OptDMD
-from dcvlive import Live
+from dvclive import Live
 from matplotlib import pyplot as plt
 
 from utils import compute_rmse
