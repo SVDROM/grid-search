@@ -34,7 +34,11 @@ def evaluate(
 
     reconstruction = dmd.reconstruct(t=slice(reconstruct_start, reconstruct_end))
     reconstruction = reconstruction.unstack()
-    reconstruction = reconstruction.copy(data=reconstruction + scaler.mean)
+    reconstruction = reconstruction.squeeze()
+    mean = scaler.mean
+    if isinstance(mean, xr.Dataset):
+        mean = mean.to_dataarray().squeeze()
+    reconstruction = reconstruction.copy(data=reconstruction + mean)
 
     return compute_rmse(groundtruth, reconstruction)
 
