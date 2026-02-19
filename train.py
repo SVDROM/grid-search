@@ -49,6 +49,7 @@ def main() -> None:
     )
 
     models_dir = Path("trained_models")
+    models_dir.mkdir(exist_ok=True)
     models_dir = (
         models_dir / "deterministic"
         if params.model.num_trials == 0
