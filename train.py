@@ -9,6 +9,7 @@ from ruamel.yaml import YAML
 from svdrom.dmd import OptDMD
 from dvclive import Live
 from matplotlib import pyplot as plt
+from datetime import datetime, timedelta
 
 from utils import compute_rmse
 
@@ -43,8 +44,33 @@ def evaluate(
     return compute_rmse(groundtruth, reconstruction)
 
 
-def main() -> None:
-    params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
+def forecast(
+    dmd: OptDMD,
+    forecast_start: str,
+    forecast_days: int = 45,
+    groundtruth_path: Path = Path("input_data/era5_slice.zarr"),
+    scaler_path: Path = Path("input_data/scaler.pkl"),
+) -> xr.DataArray:
+    
+    forecast_end = datetime.strptime(forecast_start, "%Y-%m-%dT%H") + timedelta(days=forecast_days)
+    forecast_end = forecast_end.strftime("%Y-%m-%dT%H")
+
+    groundtruth = xr.open_dataarray(str(groundtruth_path), chunks="auto")
+    groundtruth = groundtruth.sel(time=slice(forecast_start, forecast_end))
+
+    with open(scaler_path, "rb") as f:
+        scaler = pickle.load(f)
+
+    forecast = dmd.forecast(f"{forecast_end} D")
+    forecast = forecast.unstack()
+    forecast = forecast.squeeze()
+    mean = scaler.mean
+    if isinstance(mean, xr.Dataset):
+        mean = mean.to_dataarray().squeeze()
+    forecast = forecast.copy(data=forecast + mean)
+
+    return compute_rmse(groundtruth, forecast)
+
 
     svd_path = (
         Path("input_data/svd_hankel.pkl")
