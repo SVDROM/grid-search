@@ -19,7 +19,7 @@ yaml = YAML(typ="safe")
 dask.config.set(scheduler="threads", num_workers=2)
 
 
-def evaluate(
+def reconstruct(
     dmd: OptDMD,
     reconstruct_start: str,
     reconstruct_end: str,
@@ -103,7 +103,7 @@ def forecast(
         dmd.fit(svd.u, svd.s, svd.v)
 
         # evaluate the fitted DMD model
-        rmse = evaluate(
+        rmse = reconstruct(
             dmd,
             reconstruct_start=params.model.reconstruct_start,
             reconstruct_end=params.model.reconstruct_end,
