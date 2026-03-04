@@ -1,6 +1,6 @@
 import pickle
 import xarray as xr
-import dask
+from dask.distributed import Client
 import dask.array as da
 import numpy as np
 from pathlib import Path
@@ -14,8 +14,6 @@ from utils import compute_rmse
 
 
 yaml = YAML(typ="safe")
-
-dask.config.set(scheduler="threads", num_workers=2)
 
 
 def reconstruct(
@@ -121,12 +119,11 @@ def forecast(
     return compute_rmse(groundtruth, forecast)
 
 
-def main() -> None:
+def main(params: ConfigBox) -> None:
     """For all combinations of number of modes and whether to perform Hankel
     pre-processing or not (specified in params.yaml), train an OptDMD model and
     compute the reconstruction and forecast RMSE.
     """
-    params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
     for n_modes in params.train.n_modes:
         for hankel in params.train.hankel:
 
@@ -221,4 +218,10 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
+
+    # set up a local multi-threaded Dask cluster
+    client = Client(processes=False, threads_per_worker=params.dask.num_threads)
+    print(f"Dask dashboard: {client.dashboard_link}")
+
+    main(params)
