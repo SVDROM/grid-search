@@ -122,6 +122,10 @@ def forecast(
 
 
 def main() -> None:
+    """For all combinations of number of modes and whether to perform Hankel
+    pre-processing or not (specified in params.yaml), train an OptDMD model and
+    compute the reconstruction and forecast RMSE.
+    """
     params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
     for n_modes in params.train.n_modes:
         for hankel in params.train.hankel:
@@ -159,7 +163,7 @@ def main() -> None:
             model_name = f"dmd_{n_modes}"
             model_name += "_hankel.pkl" if hankel else ".pkl"
 
-            if params.train.num_trials > 0:
+            if dmd.num_trials > 0:
                 models_path = Path(params.outs.proba_models_dir)
             else:
                 models_path = Path(params.outs.deter_models_dir)
@@ -175,9 +179,45 @@ def main() -> None:
             ### Compute the reconstruction error ###
             ########################################
 
-            ############################
-            ### Compute the forecast ###
-            ############################
+            print("Computing the reconstruction RMSE.")
+            reconstruction_rmse = reconstruct(dmd, params)
+            print("Done.")
+
+            print("Saving the reconstruction RMSE to disk.")
+            metric_name = f"reconstruction_rmse_{n_modes}"
+            metric_name += "_hankel.nc" if hankel else ".nc"
+
+            if dmd.num_trials > 0:
+                metrics_path = Path(params.outs.proba_metrics_dir)
+            else:
+                metrics_path = Path(params.outs.deter_metrics_dir)
+
+            metrics_path.mkdir(parents=True, exist_ok=True)
+
+            reconstruction_rmse.to_netcdf(metrics_path / metric_name)
+            print("Done.")
+
+            ##################################
+            ### Compute the forecast error ###
+            ##################################
+
+            print("Computing the forecast RMSE.")
+            forecast_rmse = forecast(dmd, params)
+            print("Done.")
+
+            print("Saving the forecast RMSE to disk.")
+            metric_name = f"forecast_rmse_{n_modes}"
+            metric_name += "_hankel.nc" if hankel else ".nc"
+
+            if dmd.num_trials > 0:
+                metrics_path = Path(params.outs.proba_metrics_dir)
+            else:
+                metrics_path = Path(params.outs.deter_metrics_dir)
+
+            metrics_path.mkdir(parents=True, exist_ok=True)
+
+            forecast_rmse.to_netcdf(metrics_path / metric_name)
+            print("Done.")
 
 
 if __name__ == "__main__":
