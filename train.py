@@ -106,6 +106,14 @@ def get_forecast_rmse(
 
     forecast = forecast.unstack()
     forecast = forecast.squeeze()
+
+    # make sure groundtruth and forecast have exactly the same time vector
+    _, ind1, ind2 = np.intersect1d(
+        groundtruth.time.values, forecast.time.values, return_indices=True
+    )
+    groundtruth = groundtruth.isel(time=ind1)
+    forecast = forecast.isel(time=ind2)
+
     mean = scaler.mean
     if isinstance(mean, xr.Dataset):
         mean = mean.to_dataarray().squeeze()
