@@ -7,7 +7,6 @@ from pathlib import Path
 from box import ConfigBox
 from ruamel.yaml import YAML
 from svdrom.dmd import OptDMD
-from dvclive import Live
 from matplotlib import pyplot as plt
 from datetime import datetime, timedelta
 
@@ -23,6 +22,24 @@ def reconstruct(
     dmd: OptDMD,
     params: ConfigBox,
 ) -> xr.DataArray:
+    """Given a fitted DMD model and the parameters object,
+    produce a DMD reconstruction and compute the RMSE as a function
+    of lead time.
+
+    Parameters
+    ----------
+    dmd: svdrom.OptDMD
+        The fitted OptDMD model.
+    params: ConfigBox
+        The parameters object, containing the requested reconstruction
+        details.
+
+    Returns
+    -------
+    xarray.DataArray
+        The computed reconstruction RMSE averaged across latitude and
+        longitude, as a function of time.
+    """
     groundtruth = xr.open_dataarray(str(params.ins.groundtruth), chunks="auto")
     groundtruth = groundtruth.sel(
         time=slice(
@@ -53,6 +70,24 @@ def forecast(
     dmd: OptDMD,
     params: ConfigBox,
 ) -> xr.DataArray:
+    """Given a fitted DMD model and the parameters object,
+    produce a DMD forecast and compute the RMSE as a function
+    of time.
+
+    Parameters
+    ----------
+    dmd: svdrom.OptDMD
+        The fitted OptDMD model.
+    params: ConfigBox
+        The parameters object, containing the requested forecast
+        details.
+
+    Returns
+    -------
+    xarray.DataArray
+        The computed forecast RMSE averaged across latitude and
+        longitude, as a function of time.
+    """
     forecast_end = datetime.strptime(
         params.forecast.forecast_start, "%Y-%m-%dT%H"
     ) + timedelta(days=params.forecast.forecast_days)
