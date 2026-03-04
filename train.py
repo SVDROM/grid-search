@@ -13,24 +13,16 @@ from datetime import datetime, timedelta
 from utils import compute_rmse
 
 
-yaml = YAML(typ="safe")
-
-
 def reconstruct(
     dmd: OptDMD,
-    params: ConfigBox,
 ) -> xr.DataArray:
-    """Given a fitted DMD model and the parameters object,
-    produce a DMD reconstruction and compute the RMSE as a function
-    of lead time.
+    """Given a fitted DMD model, produce a DMD reconstruction
+    and compute the RMSE as a function of time.
 
     Parameters
     ----------
     dmd: svdrom.OptDMD
         The fitted OptDMD model.
-    params: ConfigBox
-        The parameters object, containing the requested reconstruction
-        details.
 
     Returns
     -------
@@ -70,19 +62,14 @@ def reconstruct(
 
 def forecast(
     dmd: OptDMD,
-    params: ConfigBox,
 ) -> xr.DataArray:
-    """Given a fitted DMD model and the parameters object,
-    produce a DMD forecast and compute the RMSE as a function
-    of time.
+    """Given a fitted DMD model, produce a DMD forecast
+    and compute the RMSE as a function of time.
 
     Parameters
     ----------
     dmd: svdrom.OptDMD
         The fitted OptDMD model.
-    params: ConfigBox
-        The parameters object, containing the requested forecast
-        details.
 
     Returns
     -------
@@ -119,7 +106,7 @@ def forecast(
     return compute_rmse(groundtruth, forecast)
 
 
-def main(params: ConfigBox) -> None:
+def main() -> None:
     """For all combinations of number of modes and whether to perform Hankel
     pre-processing or not (specified in params.yaml), train an OptDMD model and
     compute the reconstruction and forecast RMSE.
@@ -177,7 +164,7 @@ def main(params: ConfigBox) -> None:
             ########################################
 
             print("Computing the reconstruction RMSE.")
-            reconstruction_rmse = reconstruct(dmd, params)
+            reconstruction_rmse = reconstruct(dmd)
             print("Done.")
 
             print("Saving the reconstruction RMSE to disk.")
@@ -199,7 +186,7 @@ def main(params: ConfigBox) -> None:
             ##################################
 
             print("Computing the forecast RMSE.")
-            forecast_rmse = forecast(dmd, params)
+            forecast_rmse = forecast(dmd)
             print("Done.")
 
             print("Saving the forecast RMSE to disk.")
@@ -218,10 +205,11 @@ def main(params: ConfigBox) -> None:
 
 
 if __name__ == "__main__":
+    yaml = YAML(typ="safe")
     params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
 
     # set up a local multi-threaded Dask cluster
     client = Client(processes=False, threads_per_worker=params.dask.num_threads)
     print(f"Dask dashboard: {client.dashboard_link}")
 
-    main(params)
+    main()
