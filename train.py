@@ -56,6 +56,10 @@ def reconstruct(
             params.reconstruct.reconstruct_end,
         )
     )
+    if dmd.num_trials > 0:
+        # if bagging has been applied, keep only the ensemble mean
+        reconstruction = reconstruction[0]
+
     reconstruction = reconstruction.unstack()
     reconstruction = reconstruction.squeeze()
     mean = scaler.mean
@@ -102,6 +106,11 @@ def forecast(
         scaler = pickle.load(f)
 
     forecast = dmd.forecast(f"{forecast_end} D")
+
+    if dmd.num_trials > 0:
+        # if bagging has been applied, keep only the ensemble mean
+        forecast = forecast[0]
+    
     forecast = forecast.unstack()
     forecast = forecast.squeeze()
     mean = scaler.mean
