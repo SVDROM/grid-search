@@ -98,7 +98,7 @@ def forecast(
     with open(scaler_path, "rb") as f:
         scaler = pickle.load(f)
 
-    forecast = dmd.forecast(f"{forecast_end} D")
+    forecast = dmd.forecast(f"{params.forecast.forecast_days} D")
 
     if dmd.num_trials > 0:
         # if bagging has been applied, keep only the ensemble mean
