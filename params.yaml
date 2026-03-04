@@ -3,6 +3,7 @@ train:
   hankel: [False, True]
   num_trials: 0
   trial_size: 0.9
+  time_units: "h"
 reconstruct:
   reconstruct_start: "2019-11-01T00"
   reconstruct_end: "2019-12-31T20"

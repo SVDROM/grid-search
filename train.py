@@ -110,7 +110,7 @@ def forecast(
     if dmd.num_trials > 0:
         # if bagging has been applied, keep only the ensemble mean
         forecast = forecast[0]
-    
+
     forecast = forecast.unstack()
     forecast = forecast.squeeze()
     mean = scaler.mean
@@ -134,7 +134,7 @@ def main() -> None:
                 f"n_modes = {n_modes}, "
                 f"hankel = {hankel}, "
                 f"num_trials = {params.train.num_trials}, "
-                f"trial_size = {params.train.trial_size}"
+                f"trial_size = {params.train.trial_size}."
             )
 
             svd_path = params.ins.svd_hankel if hankel else params.ins.svd
@@ -144,13 +144,17 @@ def main() -> None:
 
             dmd = OptDMD(
                 n_modes=n_modes,
-                time_units="h",
+                time_units=params.train.time_units,
                 num_trials=params.train.num_trials,
                 trial_size=params.train.trial_size,
                 parallel_bagging=True,
             )
 
             dmd.fit(svd.u, svd.s, svd.v)
+
+            print("Done.")
+
+            print("Saving DMD model to disk.")
 
             model_name = f"dmd_{n_modes}"
             model_name += "_hankel.pkl" if hankel else ".pkl"
@@ -162,9 +166,10 @@ def main() -> None:
 
             models_path.mkdir(parents=True, exist_ok=True)
 
-            print("Saving DMD model to disk...")
             with open(models_path / model_name, "wb") as f:
                 pickle.dump(dmd, f)
+
+            print("Done.")
 
             ########################################
             ### Compute the reconstruction error ###
