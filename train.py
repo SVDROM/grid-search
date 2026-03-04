@@ -21,19 +21,24 @@ dask.config.set(scheduler="threads", num_workers=2)
 
 def reconstruct(
     dmd: OptDMD,
-    reconstruct_start: str,
-    reconstruct_end: str,
-    groundtruth_path: Path = Path("input_data/era5_slice.zarr"),
-    scaler_path: Path = Path("input_data/scaler.pkl"),
+    params: ConfigBox,
 ) -> xr.DataArray:
+    groundtruth = xr.open_dataarray(str(params.ins.groundtruth), chunks="auto")
+    groundtruth = groundtruth.sel(
+        time=slice(
+            params.reconstruct.reconstruct_start, params.reconstruct.reconstruct_end
+        )
+    )
 
-    groundtruth = xr.open_dataarray(str(groundtruth_path), chunks="auto")
-    groundtruth = groundtruth.sel(time=slice(reconstruct_start, reconstruct_end))
-
-    with open(scaler_path, "rb") as f:
+    with open(params.ins.scaler, "rb") as f:
         scaler = pickle.load(f)
 
-    reconstruction = dmd.reconstruct(t=slice(reconstruct_start, reconstruct_end))
+    reconstruction = dmd.reconstruct(
+        t=slice(
+            params.reconstruct.reconstruct_start,
+            params.reconstruct.reconstruct_end,
+        )
+    )
     reconstruction = reconstruction.unstack()
     reconstruction = reconstruction.squeeze()
     mean = scaler.mean
@@ -46,19 +51,19 @@ def reconstruct(
 
 def forecast(
     dmd: OptDMD,
-    forecast_start: str,
-    forecast_days: int = 45,
-    groundtruth_path: Path = Path("input_data/era5_slice.zarr"),
-    scaler_path: Path = Path("input_data/scaler.pkl"),
+    params: ConfigBox,
 ) -> xr.DataArray:
-    
-    forecast_end = datetime.strptime(forecast_start, "%Y-%m-%dT%H") + timedelta(days=forecast_days)
+    forecast_end = datetime.strptime(
+        params.forecast.forecast_start, "%Y-%m-%dT%H"
+    ) + timedelta(days=params.forecast.forecast_days)
     forecast_end = forecast_end.strftime("%Y-%m-%dT%H")
 
-    groundtruth = xr.open_dataarray(str(groundtruth_path), chunks="auto")
-    groundtruth = groundtruth.sel(time=slice(forecast_start, forecast_end))
+    groundtruth = xr.open_dataarray(params.ins.groundtruth, chunks="auto")
+    groundtruth = groundtruth.sel(
+        time=slice(params.forecast.forecast_start, forecast_end)
+    )
 
-    with open(scaler_path, "rb") as f:
+    with open(params.ins.scaler, "rb") as f:
         scaler = pickle.load(f)
 
     forecast = dmd.forecast(f"{forecast_end} D")
@@ -72,80 +77,58 @@ def forecast(
     return compute_rmse(groundtruth, forecast)
 
 
-    svd_path = (
-        Path("input_data/svd_hankel.pkl")
-        if params.model.hankel
-        else Path("input_data/svd.pkl")
-    )
+def main() -> None:
+    params = ConfigBox(yaml.load(open("params.yaml", encoding="utf-8")))
+    for n_modes in params.train.n_modes:
+        for hankel in params.train.hankel:
 
-    models_dir = Path("trained_models")
-    models_dir.mkdir(exist_ok=True)
-    models_dir = (
-        models_dir / "deterministic"
-        if params.model.num_trials == 0
-        else models_dir / "probabilistic"
-    )
-    models_dir.mkdir(exist_ok=True)
+            ###########################
+            ### Train the DMD model ###
+            ###########################
+            print(
+                "Computing DMD model for: "
+                f"n_modes = {n_modes}, "
+                f"hankel = {hankel}, "
+                f"num_trials = {params.train.num_trials}, "
+                f"trial_size = {params.train.trial_size}"
+            )
 
-    with Live("results/train") as live:
-        # load the computed SVD
-        with open(svd_path, "rb") as f:
-            svd = pickle.load(f)
+            svd_path = params.ins.svd_hankel if hankel else params.ins.svd
 
-        # fit the DMD model
-        dmd = OptDMD(
-            n_modes=params.model.n_modes,
-            time_units="h",
-            num_trials=params.model.num_trials,
-            trial_size=params.model.trial_size,
-            parallel_bagging=True,
-        )
-        dmd.fit(svd.u, svd.s, svd.v)
+            with open(svd_path, "rb") as f:
+                svd = pickle.load(f)
 
-        # evaluate the fitted DMD model
-        rmse = reconstruct(
-            dmd,
-            reconstruct_start=params.model.reconstruct_start,
-            reconstruct_end=params.model.reconstruct_end,
-        )
-        rmse_mean = rmse.mean().values
+            dmd = OptDMD(
+                n_modes=n_modes,
+                time_units="h",
+                num_trials=params.train.num_trials,
+                trial_size=params.train.trial_size,
+                parallel_bagging=True,
+            )
 
-        # log the model
-        model_name = (
-            f"dmd_{params.model.n_modes}_hankel.pkl"
-            if params.model.hankel
-            else f"dmd_{params.model.n_modes}.pkl"
-        )
-        desc = (
-            "A DMD model fitted to atmospheric temperature at "
-            f"{params.model.pressure_level} hPa."
-        )
-        live.log_artifact(
-            str(models_dir / model_name),
-            type="model",
-            desc=desc,
-            meta={
-                "n_modes": params.model.n_modes,
-                "hankel": params.model.hankel,
-                "num_trials": params.model.num_trials,
-            },
-        )
+            dmd.fit(svd.u, svd.s, svd.v)
 
-        # log a plot of RMSE vs time
-        fig, ax = plt.subplots()
-        rmse.plot(ax=ax)
-        ax.set_title(f"level = {params.model.pressure_level} hPa")
-        ax.set_ylabel("Temperature RMSE [K]")
-        ax.set_xlabel("Time")
-        fig_name = (
-            f"recon_{params.model.n_modes}_hankel.png"
-            if params.model.hankel
-            else f"recon_{params.model.n_modes}.png"
-        )
-        live.log_image(fig_name, fig)
+            model_name = f"dmd_{n_modes}"
+            model_name += "_hankel.pkl" if hankel else ".pkl"
 
-        # log the mean RMSE as a metric
-        live.log_metric("rmse", rmse_mean)
+            if params.train.num_trials > 0:
+                models_path = Path(params.outs.proba_models_dir)
+            else:
+                models_path = Path(params.outs.deter_models_dir)
+
+            models_path.mkdir(parents=True, exist_ok=True)
+
+            print("Saving DMD model to disk...")
+            with open(models_path / model_name, "wb") as f:
+                pickle.dump(dmd, f)
+
+            ########################################
+            ### Compute the reconstruction error ###
+            ########################################
+
+            ############################
+            ### Compute the forecast ###
+            ############################
 
 
 if __name__ == "__main__":
