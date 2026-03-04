@@ -13,7 +13,7 @@ from datetime import datetime, timedelta
 from utils import compute_rmse
 
 
-def reconstruct(
+def get_reconstruction_rmse(
     dmd: OptDMD,
 ) -> xr.DataArray:
     """Given a fitted DMD model, produce a DMD reconstruction
@@ -64,7 +64,7 @@ def reconstruct(
     return compute_rmse(groundtruth, reconstruction)
 
 
-def forecast(
+def get_forecast_rmse(
     dmd: OptDMD,
 ) -> xr.DataArray:
     """Given a fitted DMD model, produce a DMD forecast
@@ -199,7 +199,7 @@ def main() -> None:
             ########################################
 
             print("Computing the reconstruction RMSE.")
-            reconstruction_rmse = reconstruct(dmd)
+            reconstruction_rmse = get_reconstruction_rmse(dmd)
             print("Done.")
 
             print("Saving the reconstruction RMSE to disk.")
@@ -221,7 +221,7 @@ def main() -> None:
             ##################################
 
             print("Computing the forecast RMSE.")
-            forecast_rmse = forecast(dmd)
+            forecast_rmse = get_forecast_rmse(dmd)
             print("Done.")
 
             print("Saving the forecast RMSE to disk.")
