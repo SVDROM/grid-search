@@ -30,14 +30,18 @@ def reconstruct(
         The computed reconstruction RMSE averaged across latitude and
         longitude, as a function of time.
     """
-    groundtruth = xr.open_dataarray(str(params.ins.groundtruth), chunks="auto")
+    groundtruth_path = Path(params.ins.groundtruth)
+    check_pressure_level(groundtruth_path)
+    groundtruth = xr.open_dataarray(groundtruth_path, chunks="auto")
     groundtruth = groundtruth.sel(
         time=slice(
             params.reconstruct.reconstruct_start, params.reconstruct.reconstruct_end
         )
     )
 
-    with open(params.ins.scaler, "rb") as f:
+    scaler_path = Path(params.ins.scaler)
+    check_pressure_level(scaler_path)
+    with open(scaler_path, "rb") as f:
         scaler = pickle.load(f)
 
     reconstruction = dmd.reconstruct(
@@ -82,12 +86,16 @@ def forecast(
     ) + timedelta(days=params.forecast.forecast_days)
     forecast_end = forecast_end.strftime("%Y-%m-%dT%H")
 
-    groundtruth = xr.open_dataarray(params.ins.groundtruth, chunks="auto")
+    groundtruth_path = Path(params.ins.groundtruth)
+    check_pressure_level(groundtruth_path)
+    groundtruth = xr.open_dataarray(groundtruth_path, chunks="auto")
     groundtruth = groundtruth.sel(
         time=slice(params.forecast.forecast_start, forecast_end)
     )
 
-    with open(params.ins.scaler, "rb") as f:
+    scaler_path = Path(params.ins.scaler)
+    check_pressure_level(scaler_path)
+    with open(scaler_path, "rb") as f:
         scaler = pickle.load(f)
 
     forecast = dmd.forecast(f"{forecast_end} D")
@@ -104,6 +112,30 @@ def forecast(
     forecast = forecast.copy(data=forecast + mean)
 
     return compute_rmse(groundtruth, forecast)
+
+
+def check_pressure_level(dataset_path: Path) -> None:
+    """Check that the pressure level requested in params.yaml matches
+    the pressure level of the target dataset. The target dataset must
+    be tracked with DVC and the pressure level must be specified in the
+    'meta' section of the corresponding .dvc file. The function raises
+    ValueError if the pressure level does not match.
+
+    Parameters
+    ----------
+    dataset_path: pathlib.Path
+        Path of the target dataset, which must be tracked with DVC.
+    """
+    dvc_path = dataset_path.with_suffix(dataset_path.suffix + ".dvc")
+    dvc_config = ConfigBox(yaml.load(open(dvc_path, encoding="utf-8")))
+    pressure_level = dvc_config.outs[0].meta.pressure_level
+    if pressure_level != params.misc.pressure_level:
+        msg = (
+            f"The pressure level specified in params.yaml: {params.misc.pressure_level} "
+            f"does not match the pressure level in {str(dvc_path)}. "
+            "Make sure you have checked out the correct dataset."
+        )
+        raise ValueError(msg)
 
 
 def main() -> None:
@@ -126,6 +158,9 @@ def main() -> None:
             )
 
             svd_path = params.ins.svd_hankel if hankel else params.ins.svd
+            svd_path = Path(svd_path)
+
+            check_pressure_level(svd_path)
 
             with open(svd_path, "rb") as f:
                 svd = pickle.load(f)
