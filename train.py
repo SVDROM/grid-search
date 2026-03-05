@@ -257,3 +257,5 @@ if __name__ == "__main__":
     print(f"Dask dashboard: {client.dashboard_link}")
 
     main()
+
+    client.close()
