@@ -1,0 +1,13 @@
+outs:
+- md5: 4073d0c9659e2cf4a5a51ef3a36f51ac.dir
+  size: 920640
+  nfiles: 64
+  hash: md5
+  path: deterministic
+  meta:
+    variables: [temperature]
+    time_start: 2016-01-01T00
+    time_end: 2019-12-31T20
+    time_delta: 4h
+    pressure_level: 500
+    hankel_rank: 2
