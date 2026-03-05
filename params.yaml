@@ -18,6 +18,7 @@ ins:
   svd_hankel: "input_data/svd_hankel.pkl"
   scaler: "input_data/scaler.pkl"
 outs:
+  save_models: False
   deter_models_dir: "models/deterministic"
   deter_metrics_dir: "metrics/deterministic"
   proba_models_dir: "models/probabilistic"

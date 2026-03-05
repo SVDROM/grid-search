@@ -185,22 +185,23 @@ def main() -> None:
 
             print("Done.")
 
-            print("Saving DMD model to disk.")
+            if params.outs.save_models:
+                print("Saving DMD model to disk.")
 
-            model_name = f"dmd_{n_modes}"
-            model_name += "_hankel.pkl" if hankel else ".pkl"
+                model_name = f"dmd_{n_modes}"
+                model_name += "_hankel.pkl" if hankel else ".pkl"
 
-            if dmd.num_trials > 0:
-                models_path = Path(params.outs.proba_models_dir)
-            else:
-                models_path = Path(params.outs.deter_models_dir)
+                if dmd.num_trials > 0:
+                    models_path = Path(params.outs.proba_models_dir)
+                else:
+                    models_path = Path(params.outs.deter_models_dir)
 
-            models_path.mkdir(parents=True, exist_ok=True)
+                models_path.mkdir(parents=True, exist_ok=True)
 
-            with open(models_path / model_name, "wb") as f:
-                pickle.dump(dmd, f)
+                with open(models_path / model_name, "wb") as f:
+                    pickle.dump(dmd, f)
 
-            print("Done.")
+                print("Done.")
 
             ########################################
             ### Compute the reconstruction error ###
