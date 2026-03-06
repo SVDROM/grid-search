@@ -188,7 +188,7 @@ def main() -> None:
             if params.outs.save_models:
                 print("Saving DMD model to disk.")
 
-                model_name = f"dmd_{n_modes}"
+                model_name = f"dmd_0{n_modes}" if n_modes < 10 else f"dmd_{n_modes}"
                 model_name += "_hankel.pkl" if hankel else ".pkl"
 
                 if dmd.num_trials > 0:
@@ -212,7 +212,8 @@ def main() -> None:
             print("Done.")
 
             print("Saving the reconstruction RMSE to disk.")
-            metric_name = f"reconstruction_rmse_{n_modes}"
+            metric_name = "reconstruction_rmse_"
+            metric_name += f"0{n_modes}" if n_modes < 10 else f"{n_modes}"
             metric_name += "_hankel.nc" if hankel else ".nc"
 
             if dmd.num_trials > 0:
@@ -234,7 +235,8 @@ def main() -> None:
             print("Done.")
 
             print("Saving the forecast RMSE to disk.")
-            metric_name = f"forecast_rmse_{n_modes}"
+            metric_name = f"forecast_rmse_"
+            metric_name += f"0{n_modes}" if n_modes < 10 else f"{n_modes}"
             metric_name += "_hankel.nc" if hankel else ".nc"
 
             if dmd.num_trials > 0:
