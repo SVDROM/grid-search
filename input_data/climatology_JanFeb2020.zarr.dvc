@@ -1,7 +1,7 @@
 outs:
-- md5: 37333aa862a886ab6838ef4d4f38c3eb.dir
-  size: 828090415
-  nfiles: 529
+- md5: 15fa16209578825c5d222a78dd55e55e.dir
+  size: 828096563
+  nfiles: 530
   hash: md5
   path: climatology_JanFeb2020.zarr
   meta:
