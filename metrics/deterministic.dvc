@@ -1,7 +1,7 @@
 outs:
-- md5: 4073d0c9659e2cf4a5a51ef3a36f51ac.dir
-  size: 920640
-  nfiles: 64
+- md5: 2dbff9221bf5e362f4a910b6ef816b59.dir
+  size: 1150800
+  nfiles: 80
   hash: md5
   path: deterministic
   meta:
