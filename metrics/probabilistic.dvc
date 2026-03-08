@@ -1,0 +1,15 @@
+outs:
+- md5: f5d3fae208f8482848f500cab531bce6.dir
+  size: 230160
+  nfiles: 16
+  hash: md5
+  path: probabilistic
+  meta:
+    variables: [temperature]
+    time_start: 2016-01-01T00
+    time_end: 2019-12-31T20
+    time_delta: 4h
+    pressure_level: 500
+    hankel_rank: 2
+    num_trials: 40
+    trial_size: 0.9
