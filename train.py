@@ -179,6 +179,7 @@ def main() -> None:
                 num_trials=params.train.num_trials,
                 trial_size=params.train.trial_size,
                 parallel_bagging=True,
+                seed=params.train.seed,
             )
 
             dmd.fit(svd.u, svd.s, svd.v)
