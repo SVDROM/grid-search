@@ -1,13 +1,13 @@
 outs:
-- md5: 94488c3945fe07fc0927762e13779705
-  size: 385004920
+- md5: c75e78908ac9967c81dd9c21892c96eb
+  size: 386938724
   isexec: true
   hash: md5
   path: svd_hankel.pkl
   meta:
     variables: [temperature]
-    time_start: 2016-01-01T00
-    time_end: 2019-12-31T20
-    time_delta: 4h
-    pressure_level: 500
+    time_start: 2010-01-01T00
+    time_end: 2019-12-31T18
+    time_delta: 6h
+    pressure_level: 850
     hankel_rank: 2

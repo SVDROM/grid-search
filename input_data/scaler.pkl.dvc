@@ -1,12 +1,12 @@
 outs:
-- md5: 56d4f3c64d119e67259962b71a095c50
-  size: 4163326
+- md5: 5ec738025dc3b656e0c0edf25f206cd1
+  size: 4163076
   isexec: true
   hash: md5
   path: scaler.pkl
   meta:
     variables: [temperature]
-    time_start: 2016-01-01T00
-    time_end: 2019-12-31T20
-    time_delta: 4h
-    pressure_level: 500
+    time_start: 2010-01-01T00
+    time_end: 2019-12-31T18
+    time_delta: 6h
+    pressure_level: 850
