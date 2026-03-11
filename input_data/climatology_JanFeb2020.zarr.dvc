@@ -1,12 +1,12 @@
 outs:
-- md5: 15fa16209578825c5d222a78dd55e55e.dir
-  size: 828096563
+- md5: 4fd48d4cd421f480706a5cd6183ee347.dir
+  size: 548427387
   nfiles: 530
   hash: md5
   path: climatology_JanFeb2020.zarr
   meta:
     variables: [temperature]
-    time_start: 2016-01-01T00
-    time_end: 2019-12-31T20
-    time_delta: 4h
-    pressure_level: 500
+    time_start: 2010-01-01T00
+    time_end: 2019-12-31T18
+    time_delta: 6h
+    pressure_level: 850
