@@ -1,15 +1,15 @@
 dask:
   num_threads: 8
 train:
-  n_modes: [12, 14, 16, 18, 20]
+  n_modes: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
   hankel: [False, True]
-  num_trials: 40
+  num_trials: 0
   trial_size: 0.9
   time_units: "h"
   seed: 1234
 reconstruct:
   reconstruct_start: "2019-11-01T00"
-  reconstruct_end: "2019-12-31T20"
+  reconstruct_end: "2019-12-31T18"
 forecast:
   forecast_start: "2020-01-01T00"
   forecast_days: 45
@@ -25,4 +25,4 @@ outs:
   proba_models_dir: "models/probabilistic"
   proba_metrics_dir: "metrics/probabilistic"
 misc:
-  pressure_level: 500
+  pressure_level: 850
