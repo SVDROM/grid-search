@@ -3,3 +3,4 @@
 /svd_hankel.pkl
 /era5_slice.zarr
 /climatology_JanFeb2020.zarr
+/climatology_1990-2019.zarr

@@ -1,0 +1,14 @@
+outs:
+- md5: 0cc9c47d3ed9aa5e91eda372ed530ee0.dir
+  size: 6003029799
+  nfiles: 386
+  hash: md5
+  path: climatology_1990-2019.zarr
+  push: false
+  meta:
+    variables: [temperature]
+    time_start: 1990-01-01T00
+    time_end: 2019-12-31T18
+    time_delta: 6h
+    pressure_level: [500, 850]
+    source: "gs://weatherbench2/datasets/era5-hourly-climatology/1990-2019_6h_1440x721.zarr"
