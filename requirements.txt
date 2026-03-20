@@ -137,7 +137,7 @@ pydantic==2.12.5
 pydantic-core==2.41.5
 pydantic-settings==2.13.1
 pydap==3.5.8
-pydmd @ git+https://github.com/ClimeTrend/PyDMD.git@5df8e6f7141df208fc7861b9327959b178d49b85
+pydmd @ git+https://github.com/PyDMD/PyDMD.git
 pydot==4.0.1
 pydrive2==1.21.3
 pygit2==1.19.1
@@ -174,7 +174,7 @@ soupsieve==2.8.3
 sparse==0.18.0
 sqltrie==0.11.2
 stack-data==0.6.3
-svdrom @ git+https://github.com/SVDROM/svdrom.git@d0f1b84ba90a5a5863277bc8f809a1c1408bb1db
+svdrom @ git+https://github.com/SVDROM/svdrom.git@implement/weather-utils
 tabulate==0.10.0
 tblib==3.2.2
 threadpoolctl==3.6.0
