@@ -1,0 +1,14 @@
+outs:
+- md5: 9e4a1a50ddb42f5956cdf300ca6b9550.dir
+  size: 3226245377
+  nfiles: 142
+  hash: md5
+  path: climatology_2010-2019.zarr
+  push: false
+  meta:
+    variables: [temperature]
+    time_start: 2010-01-01T00
+    time_end: 2019-12-31T18
+    time_delta: 6h
+    pressure_level: [850]
+    source: "computed with svdrom.weather_utils.compute_climatology()"  
