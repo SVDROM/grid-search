@@ -174,7 +174,7 @@ soupsieve==2.8.3
 sparse==0.18.0
 sqltrie==0.11.2
 stack-data==0.6.3
-svdrom @ git+https://github.com/SVDROM/svdrom.git@implement/weather-utils
+svdrom[extras] @ git+https://github.com/SVDROM/svdrom.git@implement/weather-utils
 tabulate==0.10.0
 tblib==3.2.2
 threadpoolctl==3.6.0
