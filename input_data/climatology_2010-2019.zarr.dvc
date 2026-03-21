@@ -1,6 +1,6 @@
 outs:
-- md5: 9e4a1a50ddb42f5956cdf300ca6b9550.dir
-  size: 3226245377
+- md5: 4409a515addee3c9d98ff289bbf44639.dir
+  size: 3134504750
   nfiles: 142
   hash: md5
   path: climatology_2010-2019.zarr
@@ -11,4 +11,5 @@ outs:
     time_end: 2019-12-31T18
     time_delta: 6h
     pressure_level: [850]
-    source: "computed with svdrom.weather_utils.compute_climatology()"  
+    source: computed with svdrom.weather_utils.compute_climatology()
+    weighted_mean: true
