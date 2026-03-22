@@ -10,7 +10,7 @@ from svdrom.dmd import OptDMD
 from matplotlib import pyplot as plt
 from datetime import datetime, timedelta
 
-from utils import compute_rmse
+from svdrom.weather_utils import compute_rmse
 
 
 def get_reconstruction_rmse(
