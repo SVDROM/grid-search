@@ -3,7 +3,7 @@ dask:
 train:
   n_modes: [10]
   hankel: [False]
-  num_trials: 0
+  num_trials: 40
   trial_size: 0.9
   time_units: "h"
   seed: 1234
