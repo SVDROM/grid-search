@@ -4,6 +4,7 @@ outs:
   nfiles: 530
   hash: md5
   path: climatology_JanFeb2020.zarr
+  push: false
   meta:
     variables: [temperature]
     time_start: 2010-01-01T00
