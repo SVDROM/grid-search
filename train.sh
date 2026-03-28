@@ -12,7 +12,7 @@
 
 source ../load_python_3_11.sh
 
-source ../.venv/bin/activate
+source .venv/bin/activate
 echo $(which python)
 
 python train.py
