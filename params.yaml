@@ -1,17 +1,17 @@
 dask:
   num_threads: 10
 train:
-  n_modes: [10]
-  hankel: [False]
+  n_modes: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20]
+  hankel: [False, True]
   num_trials: 50
   trial_size: 0.8
   time_units: "h"
   seed: 1234
 reconstruct:
-  reconstruct_start: "2019-11-01T00"
-  reconstruct_end: "2019-12-31T18"
+  reconstruct_start: "2020-05-01T00"
+  reconstruct_end: "2020-06-30T18"
 forecast:
-  forecast_start: "2020-01-01T00"
+  forecast_start: "2020-07-01T00"
   forecast_days: 45
 ins:
   groundtruth: "input_data/era5_slice.zarr"
@@ -19,7 +19,7 @@ ins:
   svd_hankel: "input_data/svd_hankel.pkl"
   scaler: "input_data/scaler.pkl"
 outs:
-  save_models: True
+  save_models: False
   deter_models_dir: "models/deterministic"
   deter_metrics_dir: "metrics/deterministic"
   proba_models_dir: "models/probabilistic"
