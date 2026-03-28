@@ -1,5 +1,5 @@
 outs:
-- md5: 82e9e51ca87aa62cb40f6d5df7579130.dir
+- md5: cf10e1c63db24f50c4a03083521b4b11.dir
   size: 472124288
   nfiles: 1
   hash: md5
@@ -11,5 +11,5 @@ outs:
     time_delta: 6h
     pressure_level: 850
     hankel_rank: 2
-    num_trials: 40
-    trial_size: 0.9
+    num_trials: 50
+    trial_size: 0.8
