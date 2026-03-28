@@ -1,13 +1,13 @@
 outs:
-- md5: 86fefdbe9abc853a7de22cf7056f6daa.dir
-  size: 1536052388
+- md5: bcf68aae1bc5f45dfd232132c4286c62.dir
+  size: 384902053
   nfiles: 1
   hash: md5
   path: deterministic
   meta:
     variables: [temperature]
-    time_start: 2010-07-01T00
-    time_end: 2020-06-30T18
+    time_start: 2010-01-01T00
+    time_end: 2019-12-31T18
     time_delta: 6h
     pressure_level: 850
     hankel_rank: 2
