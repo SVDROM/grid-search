@@ -1,6 +1,6 @@
 # SVDROM Grid Search
 
-This project performs grid search experiments for training and evaluating Optimized Dynamic Mode Decomposition (OptDMD) models on climate date (the publicly available [ERA5 dataset](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5)).
+This project performs grid search experiments for training and evaluating Optimized Dynamic Mode Decomposition (OptDMD) models on climate data (the publicly available [ERA5 dataset](https://www.ecmwf.int/en/forecasts/dataset/ecmwf-reanalysis-v5)).
 The [SVD-ROM](https://github.com/SVDROM/svdrom) package is employed for performing OptDMD.
 The main workflow is controlled by `train.py`, with configuration specified in `params.yaml`.
 
@@ -36,6 +36,10 @@ The main workflow is controlled by `train.py`, with configuration specified in `
    ```
 
 4. Results (RMSE metrics and optionally models) are saved in the specified output directories.
+
+## Results
+
+Results are presented in the notebooks `evaluation_winter_2020.ipynb` and `evaluation_summer_2020.ipynb`, where an evaluation of 45 day DMD forecasts of winter and summer 2020 are presented.
 
 ## Requirements
 
