@@ -1,12 +1,12 @@
 outs:
-- md5: 18e81da85323d203343870887242298d.dir
-  size: 1136149195
-  nfiles: 509
+- md5: fbf7e2c4b36517da035e705154816696.dir
+  size: 1116307641
+  nfiles: 501
   hash: md5
   path: era5_slice.zarr
   meta:
     variables: [temperature]
-    time_start: 2020-05-01T00
-    time_end: 2020-08-31T18
+    time_start: 2019-11-01T00
+    time_end: 2020-02-29T18
     time_delta: 6h
     pressure_level: 850

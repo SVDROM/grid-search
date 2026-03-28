@@ -1,12 +1,12 @@
 outs:
-- md5: 9cb9f5db0e506d59b8e2de4c54a611be
-  size: 185342537
+- md5: 4ff0573f90c475ee3655c0cdd181b98e
+  size: 185341833
   isexec: true
   hash: md5
   path: svd.pkl
   meta:
     variables: [temperature]
-    time_start: 2010-07-01T00
-    time_end: 2020-06-30T18
+    time_start: 2010-01-01T00
+    time_end: 2019-12-31T18
     time_delta: 6h
     pressure_level: 850
